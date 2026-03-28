@@ -72,3 +72,20 @@ def parse_rss_datetime(pub_str: str) -> str:
 
     # 4️⃣ Restituiamo in formato SQLite standard
     return dt.strftime("%Y-%m-%d %H:%M:%S")
+
+
+# === Category Hashtag Mapping ===
+
+CATEGORY_HASHTAG_MAP = {
+    "tech": "#Tech",
+    "security": "#Cybersecurity",
+    "offerte": "#Offerta",
+}
+
+
+def get_category_hashtag(category):
+    """Restituisce l'hashtag Telegram corrispondente alla categoria del feed."""
+    if not category:
+        return "#News"
+    return CATEGORY_HASHTAG_MAP.get(category.lower(), f"#{category}")
+

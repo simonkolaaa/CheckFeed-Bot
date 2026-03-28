@@ -1,18 +1,58 @@
 {
   "telegram_token": "INSERISCI_IL_TUO_TOKEN",
+  "gemini_api_key": "INSERISCI_LA_TUA_API_KEY_GEMINI",
   "machine_name": "Server-01",
   "sites": [
     {
-      "name": "USR Emilia Romagna",
-      "url": "https://www.istruzioneer.gov.it/tutte-le-notizie/feed/"
+      "name": "The Verge",
+      "url": "https://www.theverge.com/rss/index.xml",
+      "category": "Tech"
     },
     {
-      "name": "USP Rimini",
-      "url": "https://rn.istruzioneer.gov.it/tutte-le-notizie/feed/"
+      "name": "TechCrunch",
+      "url": "https://techcrunch.com/feed/",
+      "category": "Tech"
+    },
+    {
+      "name": "Hacker News",
+      "url": "https://hnrss.org/newest",
+      "category": "Tech"
+    },
+    {
+      "name": "The Hacker News",
+      "url": "https://feeds.feedburner.com/TheHackersNews",
+      "category": "Security"
+    },
+    {
+      "name": "HDBlog Offerte",
+      "url": "https://www.hdblog.it/offerte/feed/",
+      "category": "Offerte"
+    },
+    {
+      "name": "Tom's Hardware",
+      "url": "https://www.tomshw.it/feed",
+      "category": "Offerte"
     }
   ],
+  "blacklist": [
+    "volantino",
+    "anteprima",
+    "scaduto",
+    "coupon scaduto"
+  ],
+  "urgency_keywords": [
+    "errore",
+    "prezzo",
+    "bug",
+    "minimo",
+    "gratis",
+    "errore di prezzo",
+    "prezzo errato",
+    "sconto anomalo"
+  ],
   "daily_report_time": "18:00",
-  "polling_minutes": 60,
+  "polling_minutes": 15,
   "data_retention_days": 10,
-  "disable_web_page_preview": true
+  "disable_web_page_preview": true,
+  "worldy_categories": ["worldy", "tech", "finance"]
 }

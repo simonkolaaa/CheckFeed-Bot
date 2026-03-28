@@ -12,8 +12,10 @@ env/
 data/
 logs/
 
-# Config (utente)
+# Config (utente) — MAI committare!
 config.json
+config.backup.json
+SECRET.txt
 
 # Docker
 *.pid

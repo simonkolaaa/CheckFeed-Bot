@@ -1,4 +1,4 @@
-# 📰 Telegram News Bot
+# Telegram News Bot
 
 Un bot in **Python + Docker** che:
 
@@ -11,26 +11,25 @@ Un bot in **Python + Docker** che:
 
 ---
 
-## 🚀 Funzionalità principali
-
-✅ **Polling periodico** dei feed (intervallo configurabile)  
-✅ **Notifiche immediate** via Telegram su keyword specifiche  
-✅ **Report giornaliero** automatico alle ore configurate  
-✅ **Deduplica automatica** delle notizie già viste  
-✅ **Gestione log e news** con cancellazione automatica dopo *N giorni*  
-✅ **Supporto multi–utente** con SQLite  
-✅ **Ricerca keyword precisa** con word boundaries (parole esatte)  
-✅ **Gestione keyword avanzata** (aggiungi/rimuovi selettivamente)  
-✅ **Supporto parole composte** con spazi nelle keyword  
-✅ **Controllo duplicati intelligente** (case-insensitive)  
-✅ **Contenuto completo** delle news memorizzato nel DB  
-✅ **Comandi interattivi** con feedback dettagliato
+ **Polling periodico** dei feed RSS (intervallo configurabile)  
+ **Scraping nativo di Worldy** per recuperare articoli e immagini
+ **Notifiche immediate** via Telegram su keyword specifiche  
+ **Sistema di urgenza** per notifiche sonore sulle notizie prioritarie
+ **Filtro Blacklist** per ignorare notizie contenenti precise parole chiave
+ **Riassunti AI con Google Gemini** per le notizie in arrivo
+ **Cifratura AES** per proteggere Token Telegram e API Key Gemini
+ **Report giornaliero** automatico alle ore configurate  
+ **Deduplica automatica** delle notizie gia viste  
+ **Gestione log e news** con cancellazione automatica  
+ **Supporto multi–utente** con SQLite  
+ **Contenuto e anteprime foto** memorizzate nel DB  
+ **Comandi interattivi** con feedback dettagliato
 
 ---
 
-## ⚙️ Configurazione iniziale
+## Configurazione iniziale
 
-### 1️⃣ Crea la tua configurazione
+### Crea la tua configurazione
 
 Copia il file di esempio:
 
@@ -38,36 +37,48 @@ Copia il file di esempio:
 cp config.example.json config.json
 ```
 
-### 2️⃣ Modifica `config.json`
+### 2️⃣ Modifica `config.example.json` e rinominalo in `config.json`
 
 Esempio base:
 
 ```json
 {
-  "telegram_token": "IL_TUO_TOKEN",
+  "telegram_token": "852...:AAB...",
+  "gemini_api_key": "AIza...",
   "machine_name": "Server-01",
   "sites": [
     {
-      "name": "USR Emilia Romagna",
-      "url": "https://www.istruzioneer.gov.it/tutte-le-notizie/feed/"
+      "name": "The Verge",
+      "url": "https://www.theverge.com/rss/index.xml",
+      "category": "Tech"
     }
   ],
+  "blacklist": ["volantino", "scaduto"],
+  "urgency_keywords": ["errore", "prezzo"],
   "daily_report_time": "18:00",
-  "polling_minutes": 60,
+  "polling_minutes": 15,
   "data_retention_days": 10,
-  "disable_web_page_preview": true
+  "disable_web_page_preview": true,
+  "worldy_categories": ["worldy", "tech", "finance"]
 }
 ```
 
-**Campi principali:**
+**Campi principali / Nuovi:**
+* `telegram_token` → token del bot ottenuto da BotFather
+* `gemini_api_key` → API key per generare i riassunti AI (Google Gemini)
+* `blacklist` → parole per scartare in automatico la notizia
+* `urgency_keywords` → parole per ricevere notifiche sonore (urgenza)
+* `worldy_categories` → categorie Worldy da cui importare le notizie
 
-* `telegram_token` → token del bot (ottenuto da [BotFather](https://core.telegram.org/bots#botfather))
-* `machine_name` → nome della macchina o del container
-* `sites` → elenco dei feed RSS da monitorare
-* `daily_report_time` → orario (HH:MM) del report giornaliero
-* `polling_minutes` → intervallo tra i controlli dei feed
-* `data_retention_days` → giorni di conservazione di log e news
-* `disable_web_page_preview` → nasconde le anteprime dei link (opzionale)
+### 3️⃣ Cifratura dei Dati
+Le tue credenziali non saranno mai in chiaro! È previsto uno script che cifra le chiavi nel `config.json`.
+Per utilizzarlo occorre avere una password master in una variabile d'ambiente:
+
+**Se usi Windows PowerShell (prima di avviare il bot):**
+```powershell
+$env:CHECKFEED_SECRET='LaTuaPasswordSicura123!'
+```
+*(Su linux: `export CHECKFEED_SECRET="..."`)*
 
 ---
 
@@ -97,6 +108,8 @@ Niente più config manuale: ogni utente Telegram ha il proprio profilo salvato i
 | `/fetch`                                    | Aggiorna manualmente i feed                           |
 | `/report`                                   | Genera e invia il report giornaliero                  |
 | `/latest [n]`                               | Mostra le ultime *n* notizie (default: 5)             |
+| `/top5`                                     | Genera digest AI delle 5 notizie tech migliori        |
+| `/worldy [categoria]`                       | Invia articoli di Worldy con preview immagine         |
 | `/commands`                                 | Elenco rapido di tutti i comandi disponibili          |
 
 ### 🔍 **Ricerca keyword migliorata**
@@ -119,15 +132,23 @@ All'avvio, il bot invia automaticamente un messaggio di **recap con tutti i coma
 
 1. Clona il repository
 
-2. Modifica `config.json` secondo le tue esigenze
+2. Cifra il `config.json` e ottieni la tua password master (`CHECKFEED_SECRET`).
 
-3. Avvia il container:
+3. Passa la variabile di sicurezza al comando:
 
+   **Linux / WSL / Mac:**
    ```bash
+   export CHECKFEED_SECRET="LaTuaPasswordSicura123!"
    docker-compose up -d --build
    ```
 
-I dati persistono in `data/`, inclusi log, news e database utenti.
+   **Windows PowerShell:**
+   ```powershell
+   $env:CHECKFEED_SECRET="LaTuaPasswordSicura123!"
+   docker-compose up -d --build
+   ```
+
+Il volume mappato permette ai dati (`data/`) e al file di configurazione `config.json` decifrato di comunicare, garantendo al contempo che i log, le news e le categorie rimangano persistenti.
 
 ---
 
