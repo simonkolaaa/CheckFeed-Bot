@@ -235,9 +235,3 @@ data/logs/2025-10-05.log
 Creato per sviluppatori e scuole che vogliono restare aggiornati automaticamente
 
 ---
-
-## Contributors
-
-<a href="https://github.com/federicodiluca/CheckFeed-Bot/graphs/contributors">
-  <img src="https://contrib.rocks/image?repo=federicodiluca/CheckFeed-Bot" />
-</a>
