@@ -68,8 +68,8 @@ Esempio base:
 
 ```json
 {
-  "telegram_token": "852...:AAB...",
-  "gemini_api_key": "AIza...",
+  "telegram_token": "",
+  "gemini_api_key": "",
   "machine_name": "Server-01",
   "sites": [
     {
